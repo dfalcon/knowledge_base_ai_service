@@ -1,0 +1,6 @@
+/.cursor
+/.claude
+/.codex
+.venv/
+__pycache__/
+*.pyc

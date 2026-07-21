@@ -1,0 +1,10 @@
+repos:
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.11.26
+    hooks:
+      - id: uv-export
+        name: uv-export (runtime requirements.txt)
+        args: ["--no-hashes", "--no-dev", "--output-file=requirements.txt"]
+      - id: uv-export
+        name: uv-export (dev requirements-dev.txt)
+        args: ["--no-hashes", "--output-file=requirements-dev.txt"]
