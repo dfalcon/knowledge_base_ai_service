@@ -17,6 +17,12 @@ anyio==4.14.2
     #   watchfiles
 ast-serialize==0.6.0
     # via mypy
+boto3==1.43.62
+    # via ai-service
+botocore==1.43.62
+    # via
+    #   boto3
+    #   s3transfer
 certifi==2026.6.17
     # via
     #   httpcore
@@ -84,6 +90,10 @@ idna==3.18
     #   yarl
 jinja2==3.1.6
     # via fastapi
+jmespath==1.1.0
+    # via
+    #   boto3
+    #   botocore
 librt==0.13.0 ; platform_python_implementation != 'PyPy'
     # via mypy
 lxml==6.1.1
@@ -136,6 +146,8 @@ pygments==2.20.0
     # via rich
 pypdfium2==5.12.1
     # via pdfplumber
+python-dateutil==2.9.0.post0
+    # via botocore
 python-discovery==1.5.0
     # via virtualenv
 python-docx==1.2.0
@@ -161,10 +173,14 @@ rich-toolkit==0.20.3
 rignore==0.8.0
     # via fastapi-cloud-cli
 ruff==0.15.22
+s3transfer==0.19.2
+    # via boto3
 sentry-sdk==2.66.0
     # via fastapi-cloud-cli
 shellingham==1.5.4
     # via typer
+six==1.17.0
+    # via python-dateutil
 starlette==1.3.1
     # via fastapi
 typer==0.27.0
@@ -187,7 +203,9 @@ typing-inspection==0.4.2
     #   pydantic
     #   pydantic-settings
 urllib3==2.7.0
-    # via sentry-sdk
+    # via
+    #   botocore
+    #   sentry-sdk
 uvicorn==0.51.0
     # via
     #   fastapi
