@@ -2,6 +2,8 @@ import logging
 
 from aio_pika.abc import AbstractIncomingMessage, AbstractRobustConnection
 
+from app.services.document_processor import process_document
+
 logger = logging.getLogger(__name__)
 
 QUEUE_NAME = "ai.document-processing"
@@ -9,7 +11,9 @@ QUEUE_NAME = "ai.document-processing"
 
 async def handle_message(message: AbstractIncomingMessage) -> None:
     async with message.process():
-        logger.info("received: %s", message.body.decode())
+        data = message.body.decode()
+        logger.info("received: %s", data)
+        await process_document(data)
 
 
 async def start_consuming(connection: AbstractRobustConnection) -> None:
