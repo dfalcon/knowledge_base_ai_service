@@ -20,6 +20,10 @@ certifi==2026.6.17
     #   httpcore
     #   httpx
     #   sentry-sdk
+cffi==2.1.0 ; platform_python_implementation != 'PyPy'
+    # via cryptography
+charset-normalizer==3.4.9
+    # via pdfminer-six
 click==8.4.2
     # via
     #   rich-toolkit
@@ -28,6 +32,8 @@ colorama==0.4.6 ; sys_platform == 'win32'
     # via
     #   click
     #   typer
+cryptography==50.0.0
+    # via pdfminer-six
 detect-installer==0.1.0
     # via fastapi-cloud-cli
 dnspython==2.8.0
@@ -66,6 +72,8 @@ idna==3.18
     #   yarl
 jinja2==3.1.6
     # via fastapi
+lxml==6.1.1
+    # via python-docx
 markdown-it-py==4.2.0
     # via rich
 markupsafe==3.0.3
@@ -76,8 +84,16 @@ multidict==6.7.1
     # via yarl
 pamqp==4.0.1
     # via aiormq
+pdfminer-six==20260107
+    # via pdfplumber
+pdfplumber==0.11.10
+    # via ai-service
+pillow==12.3.0
+    # via pdfplumber
 propcache==0.5.2
     # via yarl
+pycparser==3.0 ; implementation_name != 'PyPy' and platform_python_implementation != 'PyPy'
+    # via cffi
 pydantic==2.13.4
     # via
     #   fastapi
@@ -92,6 +108,10 @@ pydantic-settings==2.14.2
     # via fastapi
 pygments==2.20.0
     # via rich
+pypdfium2==5.12.1
+    # via pdfplumber
+python-docx==1.2.0
+    # via ai-service
 python-dotenv==1.2.2
     # via
     #   pydantic-settings
@@ -126,6 +146,7 @@ typing-extensions==4.16.0
     #   pydantic
     #   pydantic-core
     #   pydantic-extra-types
+    #   python-docx
     #   rich-toolkit
     #   typing-inspection
 typing-inspection==0.4.2
