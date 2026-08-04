@@ -121,6 +121,8 @@ mypy-extensions==1.1.0
     # via mypy
 nodeenv==1.10.0
     # via pre-commit
+numpy==2.5.1
+    # via ai-service
 openai==2.53.0
     # via ai-service
 packaging==26.2

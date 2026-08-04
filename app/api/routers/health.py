@@ -1,3 +1,4 @@
+import numpy as np
 from fastapi import APIRouter
 
 from app.services.document_processor import download_file, parse_docx, parse_pdf
@@ -28,4 +29,6 @@ async def test_download_file():
 async def test_embedding():
     from app.services.embedding_service import get_embedding
     embedding = get_embedding("Hello, world!")
-    return {"embedding": embedding}
+    v1, v2 = get_embedding("sick leave"), get_embedding("больничный")
+    similarity = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+    return {"similarity": similarity, "embedding": embedding}

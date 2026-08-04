@@ -99,6 +99,8 @@ mdurl==0.1.2
     # via markdown-it-py
 multidict==6.7.1
     # via yarl
+numpy==2.5.1
+    # via ai-service
 openai==2.53.0
     # via ai-service
 pamqp==4.0.1
