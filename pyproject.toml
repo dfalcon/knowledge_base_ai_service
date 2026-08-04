@@ -7,6 +7,7 @@ dependencies = [
     "aio-pika>=10.0.1",
     "boto3>=1.43.62",
     "fastapi[standard]>=0.139.2",
+    "openai>=2.53.0",
     "pdfplumber>=0.11.10",
     "python-docx>=1.2.0",
 ]

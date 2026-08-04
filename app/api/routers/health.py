@@ -23,3 +23,9 @@ async def test_docx():
 async def test_download_file():
     await download_file("intellibase", "documents/019fc72e-5e9f-7326-bc1a-1c95f7c5c0a0/UbPK7Eqw7VXFHXBr5Hpuvr5OPkYTEpiblrZ07GHu.pdf", "tmp/destination.pdf")
     return {"status": "ok"}
+
+@router.get("/embedding")
+async def test_embedding():
+    from app.services.embedding_service import get_embedding
+    embedding = get_embedding("Hello, world!")
+    return {"embedding": embedding}
