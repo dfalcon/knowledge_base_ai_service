@@ -1,9 +1,20 @@
 import numpy as np
+import tiktoken
 from fastapi import APIRouter
 
 from app.services.document_processor import download_file, parse_docx, parse_pdf
 
 router = APIRouter()
+enc = tiktoken.encoding_for_model("text-embedding-3-small")
+
+
+def stats(text: str) -> dict:
+    return {
+        "chars": len(text),
+        "words": len(text.split()),
+        "tokens": len(enc.encode(text)),
+        "text": text,
+    }
 
 
 @router.get("/health")
@@ -12,13 +23,11 @@ async def health():
 
 @router.get("/pdf")
 async def test_pdf():
-    str = await parse_pdf("1.pdf")
-    return str
+    return stats(await parse_pdf("1.pdf"))
 
 @router.get("/docx")
 async def test_docx():
-    str = await parse_docx("2.docx")
-    return str
+    return stats(await parse_docx("2.docx"))
 
 @router.get("/download")
 async def test_download_file():
@@ -31,4 +40,4 @@ async def test_embedding():
     embedding = get_embedding("Hello, world!")
     v1, v2 = get_embedding("sick leave"), get_embedding("больничный")
     similarity = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
-    return {"similarity": similarity, "embedding": embedding}
+    return {"similarity": similarity, "embedding": embedding, "v1": v1, "v2": v2}
