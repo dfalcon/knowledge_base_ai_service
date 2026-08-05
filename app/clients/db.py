@@ -14,7 +14,9 @@ SET_CONTENT = "UPDATE documents SET content = $2 WHERE id = $1"
 MARK_FAILED = "UPDATE documents SET status = 'failed', error_message = $2 WHERE id = $1"
 
 
-async def save_indexed(conn: asyncpg.Connection, document_id, content: str, rows: list[tuple]) -> None:
+async def save_indexed(
+    conn: asyncpg.Connection, document_id, content: str, rows: list[tuple]
+) -> None:
     async with conn.transaction():
         await conn.executemany(INSERT_CHUNKS, rows)
         await conn.execute(SET_CONTENT, document_id, content)

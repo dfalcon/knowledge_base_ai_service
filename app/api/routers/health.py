@@ -1,7 +1,8 @@
 import numpy as np
 from fastapi import APIRouter
 
-from app.services.document_processor import download_file, enc, parse_docx, parse_pdf
+from app.clients.storage import download_file
+from app.services.document_processor import enc, parse_docx, parse_pdf
 
 router = APIRouter()
 
@@ -29,7 +30,11 @@ async def test_docx():
 
 @router.get("/download")
 async def test_download_file():
-    await download_file("intellibase", "documents/019fc72e-5e9f-7326-bc1a-1c95f7c5c0a0/UbPK7Eqw7VXFHXBr5Hpuvr5OPkYTEpiblrZ07GHu.pdf", "tmp/destination.pdf")
+    key = (
+        "documents/019fc72e-5e9f-7326-bc1a-1c95f7c5c0a0"
+        "/UbPK7Eqw7VXFHXBr5Hpuvr5OPkYTEpiblrZ07GHu.pdf"
+    )
+    await download_file(key, "tmp/destination.pdf")
     return {"status": "ok"}
 
 @router.get("/embedding")

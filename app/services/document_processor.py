@@ -1,26 +1,19 @@
-import os
 import uuid
 
 import asyncpg
-import boto3
 import pdfplumber
 import tiktoken
-from botocore.config import Config
 from docx import Document
 
-from app.db import save_indexed
+from app.clients.db import save_indexed
+from app.clients.storage import download_file
 from app.schemas.document import DocumentUploadedEvent
 
 enc = tiktoken.encoding_for_model("text-embedding-3-small")
 
-s3_client = boto3.client(
-    "s3",
-    endpoint_url=os.getenv("AWS_ENDPOINT", "http://localhost:9000"),
-    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID", "minioadmin"),
-    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY", "minioadmin"),
-    region_name=os.getenv("AWS_DEFAULT_REGION", "us-east-1"),
-    config=Config(s3={"addressing_style": "path"}),
-)
+MIME_PDF = "application/pdf"
+MIME_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
 
 async def parse_pdf(file_path: str) -> str:
     with pdfplumber.open(file_path) as pdf:
@@ -49,18 +42,15 @@ def chunk_text(text: str, size: int = 512, overlap: int = 50) -> list[str]:
     step = size - overlap
     return [" ".join(words[i:i + size]) for i in range(0, len(words), step)]
 
-async def download_file(key, destination, bucket='intellibase',) -> None:
-    s3_client.download_file(bucket, key, destination)
-
 async def process_document(event: DocumentUploadedEvent, pool: asyncpg.Pool) -> None:
     # Download the file from S3
     local_file_path = f"tmp/{event.document_id}"
     await download_file(event.file_path, local_file_path)
 
     # Parse the document based on its type
-    if event.mime_type == "application/pdf":
+    if event.mime_type == MIME_PDF:
         text = await parse_pdf(local_file_path)
-    elif event.mime_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+    elif event.mime_type == MIME_DOCX:
         text = await parse_docx(local_file_path)
     else:
         raise ValueError(f"Unsupported document type: {event.mime_type}")
