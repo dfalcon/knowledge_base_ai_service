@@ -42,6 +42,15 @@ def chunk_text(text: str, size: int = 512, overlap: int = 50) -> list[str]:
     step = size - overlap
     return [" ".join(words[i:i + size]) for i in range(0, len(words), step)]
 
+
+def detect_language(text: str) -> str:
+    if set("їієґ") & set(text.lower()):
+        return "ukrainian"
+    if set("ыэъ") & set(text.lower()):
+        return "russian"
+    return "english"
+
+
 async def process_document(event: DocumentUploadedEvent, pool: asyncpg.Pool) -> None:
     # Download the file from S3
     local_file_path = f"tmp/{event.document_id}"
@@ -57,7 +66,8 @@ async def process_document(event: DocumentUploadedEvent, pool: asyncpg.Pool) -> 
 
     # Chunk the text for further processing
     chunks = chunk_text(text)
+    language = detect_language(text)
 
     rows = build_rows(event.document_id, chunks)
     async with pool.acquire() as conn:
-        await save_indexed(conn, event.document_id, text, rows)
+        await save_indexed(conn, event.document_id, text, language, rows)

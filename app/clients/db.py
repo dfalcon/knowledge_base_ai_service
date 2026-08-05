@@ -9,17 +9,17 @@ INSERT_CHUNKS = """
                   qdrant_id = EXCLUDED.qdrant_id
 """
 
-SET_CONTENT = "UPDATE documents SET content = $2 WHERE id = $1"
+SET_CONTENT = "UPDATE documents SET content = $2, language = $3 WHERE id = $1"
 
 MARK_FAILED = "UPDATE documents SET status = 'failed', error_message = $2 WHERE id = $1"
 
 
 async def save_indexed(
-    conn: asyncpg.Connection, document_id, content: str, rows: list[tuple]
+    conn: asyncpg.Connection, document_id, content: str, language: str, rows: list[tuple]
 ) -> None:
     async with conn.transaction():
         await conn.executemany(INSERT_CHUNKS, rows)
-        await conn.execute(SET_CONTENT, document_id, content)
+        await conn.execute(SET_CONTENT, document_id, content, language)
 
 
 async def mark_failed(conn: asyncpg.Connection, document_id, error: str) -> None:
