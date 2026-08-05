@@ -1,11 +1,9 @@
 import numpy as np
-import tiktoken
 from fastapi import APIRouter
 
-from app.services.document_processor import download_file, parse_docx, parse_pdf
+from app.services.document_processor import download_file, enc, parse_docx, parse_pdf
 
 router = APIRouter()
-enc = tiktoken.encoding_for_model("text-embedding-3-small")
 
 
 def stats(text: str) -> dict:

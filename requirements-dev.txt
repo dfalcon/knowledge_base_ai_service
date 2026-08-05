@@ -18,6 +18,8 @@ anyio==4.14.2
     #   watchfiles
 ast-serialize==0.6.0
     # via mypy
+asyncpg==0.31.0
+    # via ai-service
 boto3==1.43.62
     # via ai-service
 botocore==1.43.62
