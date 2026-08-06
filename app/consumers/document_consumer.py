@@ -12,6 +12,7 @@ from app.services.document_processor import process_document
 logger = logging.getLogger(__name__)
 
 QUEUE_NAME = "ai.document-processing"
+ROUTING_KEY_UPLOADED = "document.uploaded"
 SUPPORTED_VERSION = "1.0"
 
 
@@ -29,10 +30,6 @@ async def handle_message(
             logger.warning("unexpected event version: %s", event.version)
 
         logger.info("received: document:%s", event)
-        # Commit → publish → ack (ack happens when this block exits). Publishing
-        # after the ack would lose the notification if the process died in between;
-        # a failure here re-runs the whole thing, which is safe because indexing
-        # is idempotent (ON CONFLICT + uuid5 point ids).
         await process_document(event, pool)
         await publish_indexed(exchange, event.document_id)
 
@@ -42,4 +39,6 @@ async def start_consuming(connection: AbstractRobustConnection, pool: asyncpg.Po
     await channel.set_qos(prefetch_count=10)
     exchange = await declare_exchange(channel)
     queue = await channel.declare_queue(QUEUE_NAME, durable=True)
+
+    await queue.bind(exchange, ROUTING_KEY_UPLOADED)
     await queue.consume(partial(handle_message, pool=pool, exchange=exchange))
