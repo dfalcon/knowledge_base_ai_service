@@ -6,7 +6,7 @@ import aio_pika
 import asyncpg
 from fastapi import FastAPI
 
-from app.api.routers import health
+from app.api.routers import chat, health
 from app.consumers.document_consumer import start_consuming
 
 RABBITMQ_URL = os.getenv("RABBITMQ_URL", "amqp://intellibase:secret@localhost/")
@@ -28,3 +28,4 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(health.router)
+app.include_router(chat.router)
