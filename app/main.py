@@ -17,6 +17,7 @@ logging.basicConfig(level=logging.INFO)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     pool = await asyncpg.create_pool(DATABASE_URL, min_size=2, max_size=10)
+    app.state.pool = pool
     connection = await aio_pika.connect_robust(RABBITMQ_URL)
     await start_consuming(connection, pool)
     try:

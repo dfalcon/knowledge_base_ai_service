@@ -36,7 +36,8 @@ SEARCH_FTS = """
     SELECT d.id,
            d.title,
            ts_rank(d.search_vector, query)                                   AS rank,
-           ts_headline(cfg.c, d.content, query, 'MaxWords=50, MinWords=20')  AS excerpt
+           ts_headline(cfg.c, d.content, query,
+                       'MaxWords=50, MinWords=20, StartSel="", StopSel=""')  AS excerpt
     FROM documents d, cfg, websearch_to_tsquery(cfg.c, $2) query
     WHERE d.search_vector @@ query
       AND d.knowledge_base_id = $3
