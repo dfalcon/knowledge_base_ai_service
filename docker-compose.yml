@@ -1,0 +1,18 @@
+services:
+  ai-service:
+    build: .
+    env_file: .env
+    # Bound to loopback: Laravel reaches this over the shared network by service name, and
+    # there is no auth on /chat yet, so it must not be open to the internet.
+    ports:
+      - "127.0.0.1:8000:8000"
+    restart: unless-stopped
+    networks:
+      - knowledge_base
+
+# Postgres, RabbitMQ and MinIO live in the knowledge_base compose project. Joining its
+# network lets this service use their names as hosts instead of publishing ports.
+networks:
+  knowledge_base:
+    external: true
+    name: knowledge_base_default
