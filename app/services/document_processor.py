@@ -53,7 +53,7 @@ def detect_language(text: str) -> str:
 
 async def process_document(event: DocumentUploadedEvent, pool: asyncpg.Pool) -> None:
     # Download the file from S3
-    local_file_path = f"tmp/{event.document_id}"
+    local_file_path = f"/tmp/{event.document_id}"
     await download_file(event.file_path, local_file_path)
 
     # Parse the document based on its type
